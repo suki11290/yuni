@@ -1,7 +1,5 @@
 * {
-
     box-sizing:border-box;
-
 }
 
 
@@ -13,9 +11,7 @@ body {
 
     background:#f3ead8;
 
-    font-family:
-    "Microsoft YaHei",
-    serif;
+    font-family:"Microsoft YaHei",serif;
 
     text-align:center;
 
@@ -43,21 +39,45 @@ h1 {
 
 
 
+/* 游戏信息栏 */
+
+.game-info{
+
+    width:80%;
+
+    max-width:600px;
+
+    margin:20px auto;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:15px 30px;
+
+    background:#f4ead5;
+
+    border:2px solid #b89563;
+
+    border-radius:12px;
+
+    color:#5c4328;
+
+}
+
+
+
 /* 游戏区域 */
 
 #game-board {
-
 
     width:520px;
 
     margin:40px auto;
 
-
     display:grid;
 
-    grid-template-columns:
-    repeat(4,120px);
-
+    grid-template-columns:repeat(4,120px);
 
     gap:12px;
 
@@ -65,18 +85,15 @@ h1 {
 
 
 
-/* 卡牌 */
+/* 单张卡牌 */
 
 .card {
-
 
     width:120px;
 
     height:160px;
 
-
-    perspective:800px;
-
+    perspective:1000px;
 
     cursor:pointer;
 
@@ -84,39 +101,35 @@ h1 {
 
 
 
-.card-inner {
+/* 翻转容器 */
 
+.card-inner {
 
     width:100%;
 
     height:100%;
 
-
     position:relative;
 
+    transition:transform .6s;
 
-    transition:
-    transform .6s;
-
-
-    transform-style:
-    preserve-3d;
-
+    transform-style:preserve-3d;
 
 }
 
 
 
-.card.flip
-.card-inner {
+/* 翻牌 */
 
+.card.flip .card-inner {
 
-    transform:
-    rotateY(180deg);
+    transform:rotateY(180deg);
 
 }
 
 
+
+/* 正反面 */
 
 .card-front,
 .card-back {
@@ -130,7 +143,9 @@ h1 {
     height:100%;
 
 
-    backface-visibility:hidden;
+    top:0;
+
+    left:0;
 
 
     border-radius:12px;
@@ -139,35 +154,47 @@ h1 {
     overflow:hidden;
 
 
-    border:
-    3px solid #b89563;
+    border:3px solid #b89563;
 
+
+    backface-visibility:hidden;
+
+    -webkit-backface-visibility:hidden;
 
 }
 
 
 
+/* 图片 */
+
 .card-front img,
 .card-back img {
-
 
     width:100%;
 
     height:100%;
 
-
     object-fit:cover;
-
 
 }
 
 
 
+/* 正面 */
+
 .card-front {
 
 
-    transform:
-    rotateY(180deg);
+    transform:rotateY(180deg);
 
+}
+
+
+
+/* 背面 */
+
+.card-back {
+
+    transform:rotateY(0deg);
 
 }

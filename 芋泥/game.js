@@ -1,46 +1,32 @@
 // ======================
 // 清明雅集 · 寻珍
-// V1.0 翻牌配对版
+// V1.2 记忆展示版
 // ======================
 
-
-// 卡牌图片
 
 const cardImages = [
 
     "peacock.png",
-
     "jade_ring.png",
-
     "maple_leaf.png",
-
     "folding_fan.png",
-
     "lingzhi.png",
-
     "round_fan.png",
-
     "spinning_top.png",
-
     "black_bowl.png"
 
 ];
 
 
-
-// 每张牌复制一次
+// 生成两组牌
 
 let cards = [
-
     ...cardImages,
-
     ...cardImages
-
 ];
 
 
-
-// 随机排序
+// 打乱
 
 cards.sort(
     () => Math.random() - 0.5
@@ -48,104 +34,205 @@ cards.sort(
 
 
 
-// 游戏区域
-
 const board =
-document.getElementById(
-    "game-board"
-);
+document.getElementById("game-board");
 
 
 
-// 游戏状态
+const matchedText =
+document.getElementById("matched-count");
+
+
+const moveText =
+document.getElementById("move-count");
+
+
+const timeText =
+document.getElementById("time-count");
+
+
+
 
 let firstCard = null;
 
 let secondCard = null;
 
-let lockBoard = false;
+let lockBoard = true;
+
 
 let matched = 0;
+
+let moves = 0;
+
 
 
 
 // 创建卡牌
 
-cards.forEach(
-
-    image => {
+cards.forEach(image=>{
 
 
-        const card =
-        document.createElement(
-            "div"
-        );
+    const card =
+    document.createElement("div");
 
 
-        card.className =
-        "card";
+    card.className="card";
+
+
+    card.dataset.image=image;
 
 
 
-        // 保存图片信息
+    card.innerHTML = `
 
-        card.dataset.image =
-        image;
-
+        <div class="card-inner">
 
 
-        card.innerHTML = `
+            <div class="card-front">
 
-
-            <div class="card-inner">
-
-
-                <div class="card-front">
-
-
-                    <img src="assets/cards/${image}">
-
-
-                </div>
-
-
-
-                <div class="card-back">
-
-
-                    <img src="assets/card-back.png">
-
-
-                </div>
-
+                <img src="assets/cards/${image}">
 
             </div>
 
 
-        `;
+            <div class="card-back">
+
+                <img src="assets/card-back.png">
+
+            </div>
+
+
+        </div>
+
+    `;
+
+
+    board.appendChild(card);
 
 
 
-        board.appendChild(card);
+    // 开始全部翻开
+
+    setTimeout(()=>{
+
+        card.classList.add("flip");
+
+    },300);
 
 
 
-        // 点击事件
+});
 
-        card.onclick = function(){
+
+
+
+
+// ======================
+// 8秒记忆倒计时
+// ======================
+
+
+let seconds = 8;
+
+
+timeText.innerText = seconds;
+
+
+
+let timer =
+setInterval(()=>{
+
+
+    seconds--;
+
+
+    timeText.innerText =
+    seconds;
+
+
+
+    console.log(
+        "剩余:",
+        seconds
+    );
+
+
+
+    if(seconds <= 0){
+
+
+        clearInterval(timer);
+
+
+
+        // 全部盖回
+
+        document
+        .querySelectorAll(".card")
+        .forEach(card=>{
+
+
+            card.classList.remove(
+                "flip"
+            );
+
+
+        });
+
+
+
+        timeText.innerText =
+        "开始";
+
+
+
+        lockBoard=false;
+
+
+
+        startGame();
+
+
+
+    }
+
+
+
+},1000);
+
+
+
+
+
+
+// ======================
+// 开始游戏
+// ======================
+
+
+function startGame(){
+
+
+    document
+    .querySelectorAll(".card")
+    .forEach(card=>{
+
+
+        card.onclick=function(){
+
 
 
             if(lockBoard)
-                return;
+            return;
 
 
 
-            if(card === firstCard)
-                return;
+            if(this===firstCard)
+            return;
 
 
 
-            card.classList.add(
+            this.classList.add(
                 "flip"
             );
 
@@ -154,7 +241,7 @@ cards.forEach(
             if(!firstCard){
 
 
-                firstCard = card;
+                firstCard=this;
 
 
                 return;
@@ -163,46 +250,66 @@ cards.forEach(
 
 
 
-            secondCard = card;
+            secondCard=this;
+
+
+            moves++;
+
+
+            moveText.innerText =
+            moves;
 
 
 
             checkMatch();
 
 
+
         };
 
 
-    }
-
-);
+    });
 
 
 
+}
 
-// 判断是否相同
+
+
+
+
+
+// ======================
+// 判断匹配
+// ======================
+
 
 function checkMatch(){
 
 
-    let isMatch =
+
+    let same =
 
     firstCard.dataset.image ===
     secondCard.dataset.image;
 
 
 
-    if(isMatch){
+    if(same){
 
 
         matched++;
 
 
-        resetCards();
+        matchedText.innerText =
+        matched;
 
 
 
-        if(matched === cardImages.length){
+        reset();
+
+
+        if(matched===8){
 
 
             setTimeout(()=>{
@@ -221,12 +328,10 @@ function checkMatch(){
 
 
     }
-
     else{
 
 
-        lockBoard = true;
-
+        lockBoard=true;
 
 
         setTimeout(()=>{
@@ -242,8 +347,7 @@ function checkMatch(){
             );
 
 
-
-            resetCards();
+            reset();
 
 
 
@@ -258,18 +362,16 @@ function checkMatch(){
 
 
 
-// 重置选择状态
-
-function resetCards(){
 
 
-    firstCard = null;
+function reset(){
 
 
-    secondCard = null;
+    firstCard=null;
 
+    secondCard=null;
 
-    lockBoard = false;
+    lockBoard=false;
 
 
 }
