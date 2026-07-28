@@ -1,10 +1,10 @@
 // ======================
 // 清明雅集 · 寻珍
-// V1.1 记忆翻牌版
+// V5.0 卷轴 + 提前生成卡牌版
 // ======================
 
 
-const cardImages = [
+const cardImages=[
 
 "peacock.png",
 "jade_ring.png",
@@ -19,22 +19,58 @@ const cardImages = [
 
 
 
-let cards=[
-
-...cardImages,
-...cardImages
-
-];
+const enterBtn =
+document.getElementById(
+"enter-btn"
+);
 
 
 
-cards.sort(()=>Math.random()-0.5);
+const startBtn =
+document.getElementById(
+"start-btn"
+);
+
+
+
+const startScreen =
+document.getElementById(
+"start-screen"
+);
+
+
+
+const gameContainer =
+document.getElementById(
+"game-container"
+);
 
 
 
 const board =
 document.getElementById(
 "game-board"
+);
+
+
+
+const matchedText =
+document.getElementById(
+"matched-count"
+);
+
+
+
+const moveText =
+document.getElementById(
+"move-count"
+);
+
+
+
+const timeText =
+document.getElementById(
+"memory-time"
 );
 
 
@@ -52,19 +88,101 @@ let moves=0;
 
 
 
-let started=false;
+// ======================
+// 页面进入
+// ======================
+
+
+enterBtn.onclick=function(){
+
+
+    startScreen.classList.add(
+        "scroll-close"
+    );
+
+
+    setTimeout(()=>{
+
+
+        startScreen.style.display="none";
+
+
+        gameContainer.style.display="block";
+
+
+        //进入后立即生成背面卡牌
+
+        createCards();
+
+
+    },800);
+
+
+};
 
 
 
+
+
+// ======================
+// 开始游戏
+// ======================
+
+
+startBtn.onclick=function(){
+
+
+    startBtn.disabled=true;
+
+
+    memoryPhase();
+
+
+};
+
+
+
+
+
+// ======================
 // 创建卡牌
+// ======================
+
+
+function createCards(){
+
+
+let cards=[
+
+...cardImages,
+
+...cardImages
+
+];
+
+
+cards.sort(
+()=>Math.random()-0.5
+);
+
+
+
+board.innerHTML="";
+
+
 
 cards.forEach(image=>{
 
 
-const card=document.createElement("div");
+const card=
+document.createElement(
+"div"
+);
+
 
 
 card.className="card";
+
 
 
 card.dataset.image=image;
@@ -72,6 +190,7 @@ card.dataset.image=image;
 
 
 card.innerHTML=`
+
 
 <div class="card-inner">
 
@@ -81,6 +200,7 @@ card.innerHTML=`
 <img src="assets/cards/${image}">
 
 </div>
+
 
 
 <div class="card-back">
@@ -100,13 +220,8 @@ board.appendChild(card);
 
 
 
-// 点击翻牌
 
 card.onclick=function(){
-
-
-if(!started)
-return;
 
 
 if(lockBoard)
@@ -114,19 +229,21 @@ return;
 
 
 
-if(card.classList.contains("flip"))
+if(this===firstCard)
 return;
 
 
 
-card.classList.add("flip");
+this.classList.add(
+"flip"
+);
 
 
 
 if(!firstCard){
 
 
-firstCard=card;
+firstCard=this;
 
 
 }
@@ -134,15 +251,13 @@ firstCard=card;
 else{
 
 
-secondCard=card;
+secondCard=this;
 
 
 moves++;
 
-document.getElementById(
-"move-count"
-).innerText=moves;
 
+moveText.innerText=moves;
 
 
 checkMatch();
@@ -160,37 +275,52 @@ checkMatch();
 
 
 
-
-// 开始按钮
-
-document
-.getElementById("start-btn")
-.onclick=function(){
+}
 
 
 
-started=true;
+
+
+// ======================
+// 八秒记忆阶段
+// ======================
+
+
+function memoryPhase(){
+
+
+
+const allCards=
+document.querySelectorAll(
+".card"
+);
+
 
 
 lockBoard=true;
 
 
 
-let cardsAll=document.querySelectorAll(".card");
+//全部翻开
 
 
+allCards.forEach(card=>{
 
-cardsAll.forEach(card=>{
 
-
-card.classList.add("flip");
+card.classList.add(
+"flip"
+);
 
 
 });
 
 
 
+
 let time=8;
+
+
+timeText.innerText=time;
 
 
 
@@ -200,26 +330,34 @@ let timer=setInterval(()=>{
 time--;
 
 
-document.getElementById(
-"time-count"
-).innerText=time;
+timeText.innerText=time;
 
 
 
 if(time<=0){
 
 
+
 clearInterval(timer);
 
 
 
-cardsAll.forEach(card=>{
+//翻回背面
 
 
-card.classList.remove("flip");
+allCards.forEach(card=>{
+
+
+card.classList.remove(
+"flip"
+);
 
 
 });
+
+
+
+timeText.innerText="开始";
 
 
 
@@ -227,50 +365,48 @@ lockBoard=false;
 
 
 
-document.getElementById(
-"time-count"
-).innerText=0;
-
-
-
 }
+
 
 
 },1000);
 
 
 
-};
+}
 
 
 
 
 
-// 判断匹配
+// ======================
+// 判断配对
+// ======================
+
 
 function checkMatch(){
 
 
-let match=
-firstCard.dataset.image===
+
+let same =
+
+firstCard.dataset.image ===
 secondCard.dataset.image;
 
 
 
-if(match){
+if(same){
 
 
 
 matched++;
 
 
-document.getElementById(
-"matched-count"
-).innerText=matched;
+matchedText.innerText=matched;
 
 
 
-resetCards();
+reset();
 
 
 
@@ -304,14 +440,18 @@ lockBoard=true;
 setTimeout(()=>{
 
 
-firstCard.classList.remove("flip");
+firstCard.classList.remove(
+"flip"
+);
 
 
-secondCard.classList.remove("flip");
+secondCard.classList.remove(
+"flip"
+);
 
 
 
-resetCards();
+reset();
 
 
 
@@ -322,18 +462,22 @@ resetCards();
 }
 
 
+
+
 }
 
 
 
 
 
-function resetCards(){
+function reset(){
 
 
 firstCard=null;
 
+
 secondCard=null;
+
 
 lockBoard=false;
 
