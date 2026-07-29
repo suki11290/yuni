@@ -5,7 +5,7 @@
 
 <meta charset="UTF-8">
 
-<title>清明雅集 · 寻珍</title>
+<title>清明雅集·寻珍</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -15,9 +15,67 @@
 <body>
 
 
+
+<!-- 首页 -->
+
+<div id="home-page">
+
+
+    <div class="welcome-panel">
+
+
+        <h2>
+        清明雅集 · 寻珍
+        </h2>
+
+
+        <p>
+        一场宋韵珍品的寻觅之旅
+        </p>
+
+
+        <p>
+
+        春风拂柳，雅集初开。<br>
+
+        藏于清明画卷之间的珍品，<br>
+
+        等待有缘人寻回。
+
+        </p>
+
+
+
+        <button id="enter-btn"
+        class="start-btn">
+
+        进入雅集
+
+        </button>
+
+
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+<!-- 游戏页面 -->
+
+<div id="game-page"
+style="display:none;">
+
+
+
 <h1>
 清明雅集 · 寻珍
 </h1>
+
 
 
 <p class="subtitle">
@@ -26,52 +84,62 @@
 
 
 
-<!-- 游戏信息栏 -->
+<button id="start-game"
+class="start-btn">
+
+开始游戏
+
+</button>
+
+
+
 
 <div class="game-info">
 
 
-    <div>
+<div>
 
-        已寻珍品：
+已寻珍品：
 
-        <span id="matched-count">
-            0
-        </span>
+<span id="matched-count">
+0
+</span>
 
-        / 8
+ / 8
 
-    </div>
-
-
-
-    <div>
-
-        翻牌次数：
-
-        <span id="move-count">
-            0
-        </span>
-
-    </div>
+</div>
 
 
 
-    <div>
+<div>
 
-        记忆时间：
+翻牌次数：
 
-        <span id="time-count">
-            8
-        </span>
-
-        秒
-
-    </div>
+<span id="move-count">
+0
+</span>
 
 
 </div>
 
+
+
+
+<div>
+
+记忆时间：
+
+<span id="time-count">
+8
+
+</span>
+
+秒
+
+</div>
+
+
+</div>
 
 
 
@@ -82,11 +150,15 @@
 
 
 
+</div>
+
+
 
 
 <script src="game.js"></script>
 
 
 </body>
+
 
 </html>

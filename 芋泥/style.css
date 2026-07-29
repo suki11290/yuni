@@ -1,6 +1,9 @@
 * {
+
     box-sizing:border-box;
+
 }
+
 
 
 body {
@@ -9,127 +12,401 @@ body {
 
     min-height:100vh;
 
-    background:#f3ead8;
 
-    font-family:"Microsoft YaHei",serif;
+    background-image:
+    url("assets/background.png");
+
+
+    background-size:
+    cover;
+
+
+    background-position:
+    center;
+
+
+    background-repeat:
+    no-repeat;
+
+
+    background-attachment:
+    fixed;
+
+
+    font-family:
+    "Microsoft YaHei",
+    serif;
+
 
     text-align:center;
 
 }
 
 
-/* 标题 */
+
+/* =====================
+   通用标题
+===================== */
+
 
 h1 {
 
-    margin-top:40px;
+
+    margin-top:30px;
+
 
     color:#5b3924;
 
+
     letter-spacing:8px;
 
+
+    font-size:36px;
+
+
 }
+
 
 
 .subtitle {
 
+
     color:#806044;
+
+
+    font-size:18px;
+
 
 }
 
 
 
-/* 游戏信息栏 */
 
-.game-info{
+/* =====================
+   首页
+===================== */
 
-    width:80%;
 
-    max-width:600px;
+#home-page {
 
-    margin:20px auto;
+
+    height:100vh;
+
 
     display:flex;
 
-    justify-content:space-between;
 
-    padding:15px 30px;
+    justify-content:center;
 
-    background:#f4ead5;
 
-    border:2px solid #b89563;
+    align-items:center;
 
-    border-radius:12px;
-
-    color:#5c4328;
 
 }
 
 
 
-/* 游戏区域 */
 
-#game-board {
+.welcome-panel {
+
 
     width:520px;
 
-    margin:40px auto;
 
-    display:grid;
+    padding:50px 60px;
 
-    grid-template-columns:repeat(4,120px);
 
-    gap:12px;
+    background:
+
+    rgba(240,215,165,0.92);
+
+
+
+    border:
+
+    12px solid #b89563;
+
+
+
+    border-radius:20px;
+
+
+
+    box-shadow:
+
+    0 15px 35px rgba(0,0,0,0.35);
+
+
 
 }
 
 
 
-/* 单张卡牌 */
+.welcome-panel h2 {
 
-.card {
 
-    width:120px;
+    color:#5b3924;
 
-    height:160px;
 
-    perspective:1000px;
+    font-size:38px;
+
+
+    letter-spacing:8px;
+
+
+}
+
+
+
+.welcome-panel p {
+
+
+    color:#806044;
+
+
+    font-size:20px;
+
+
+    line-height:2.2;
+
+
+}
+
+
+
+
+.start-btn {
+
+
+    margin-top:10px;
+
+
+    padding:
+
+    10px 35px;
+
+
+    border:none;
+
+
+    border-radius:25px;
+
+
+    background:#93602d;
+
+
+    color:white;
+
+
+    font-size:16px;
+
 
     cursor:pointer;
 
+
 }
 
 
 
-/* 翻转容器 */
+.start-btn:hover {
+
+
+    background:#70451f;
+
+
+}
+
+
+
+
+
+/* =====================
+   游戏页面
+===================== */
+
+
+#game-page {
+
+
+    height:100vh;
+
+
+    overflow:hidden;
+
+
+}
+
+
+
+
+
+/* 游戏标题 */
+
+
+#game-page h1 {
+
+
+    margin-top:10px;
+
+
+    font-size:28px;
+
+
+    letter-spacing:5px;
+
+
+}
+
+
+
+
+/* =====================
+   信息栏
+===================== */
+
+
+.game-info {
+
+
+    width:560px;
+
+
+    margin:10px auto;
+
+
+    padding:10px 20px;
+
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+
+    background:
+
+    rgba(244,234,213,0.9);
+
+
+
+    border:
+
+    2px solid #b89563;
+
+
+
+    border-radius:12px;
+
+
+
+    color:#5c4328;
+
+
+    font-size:16px;
+
+
+}
+
+
+
+
+
+/* =====================
+   卡牌区域
+===================== */
+
+
+#game-board {
+
+    width:384px;
+
+    margin:15px auto;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,90px);
+
+    gap:8px;
+
+}
+
+
+
+
+
+/* =====================
+   卡牌
+===================== */
+
+
+.card {
+
+
+    width:90px;
+
+
+    height:110px;
+
+
+    perspective:800px;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
 
 .card-inner {
 
+
     width:100%;
+
 
     height:100%;
 
+
+
     position:relative;
 
-    transition:transform .6s;
 
-    transform-style:preserve-3d;
+
+    transition:
+
+    transform .6s;
+
+
+
+    transform-style:
+
+    preserve-3d;
+
 
 }
 
 
-
-/* 翻牌 */
 
 .card.flip .card-inner {
 
-    transform:rotateY(180deg);
+
+    transform:
+
+    rotateY(180deg);
+
 
 }
 
 
 
-/* 正反面 */
+
 
 .card-front,
 .card-back {
@@ -140,61 +417,59 @@ h1 {
 
     width:100%;
 
+
     height:100%;
 
 
-    top:0;
 
-    left:0;
+    backface-visibility:hidden;
+
 
 
     border-radius:12px;
 
 
+
     overflow:hidden;
 
 
-    border:3px solid #b89563;
 
+    border:
 
-    backface-visibility:hidden;
+    3px solid #b89563;
 
-    -webkit-backface-visibility:hidden;
 
 }
 
 
 
-/* 图片 */
+
 
 .card-front img,
 .card-back img {
 
+
     width:100%;
+
 
     height:100%;
 
+
+
     object-fit:cover;
+
 
 }
 
 
 
-/* 正面 */
 
 .card-front {
 
 
-    transform:rotateY(180deg);
+    transform:
 
-}
+    rotateY(180deg);
 
-
-
-/* 背面 */
-
-.card-back {
-
-    transform:rotateY(0deg);
 
 }

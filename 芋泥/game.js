@@ -1,274 +1,321 @@
 // ======================
 // 清明雅集 · 寻珍
-// V1.2 记忆展示版
+// V5.0 开始按钮控制版
 // ======================
 
 
-const cardImages = [
 
-    "peacock.png",
-    "jade_ring.png",
-    "maple_leaf.png",
-    "folding_fan.png",
-    "lingzhi.png",
-    "round_fan.png",
-    "spinning_top.png",
-    "black_bowl.png"
+let cardImages=[
+
+"peacock.png",
+"jade_ring.png",
+"maple_leaf.png",
+"folding_fan.png",
+"lingzhi.png",
+"round_fan.png",
+"spinning_top.png",
+"black_bowl.png"
 
 ];
 
 
-// 生成两组牌
 
-let cards = [
-    ...cardImages,
-    ...cardImages
-];
+let cards=[];
 
 
-// 打乱
+let firstCard=null;
 
-cards.sort(
-    () => Math.random() - 0.5
+let secondCard=null;
+
+
+let lockBoard=false;
+
+
+let matched=0;
+
+let moves=0;
+
+
+
+
+
+window.onload=function(){
+
+
+
+const enterBtn=
+document.getElementById(
+"enter-btn"
 );
 
 
 
-const board =
-document.getElementById("game-board");
+const startBtn=
+document.getElementById(
+"start-game"
+);
 
 
 
-const matchedText =
-document.getElementById("matched-count");
-
-
-const moveText =
-document.getElementById("move-count");
-
-
-const timeText =
-document.getElementById("time-count");
+const homePage=
+document.getElementById(
+"home-page"
+);
 
 
 
-
-let firstCard = null;
-
-let secondCard = null;
-
-let lockBoard = true;
-
-
-let matched = 0;
-
-let moves = 0;
+const gamePage=
+document.getElementById(
+"game-page"
+);
 
 
 
 
-// 创建卡牌
+
+// 进入雅集
+
+enterBtn.onclick=function(){
+
+
+homePage.style.display="none";
+
+
+gamePage.style.display="block";
+
+
+createGame();
+
+
+};
+
+
+
+
+
+// 开始游戏
+
+startBtn.onclick=function(){
+
+
+startBtn.style.display="none";
+
+
+memoryStart();
+
+
+};
+
+
+
+};
+
+
+
+
+
+
+
+
+// ======================
+// 创建棋盘
+// ======================
+
+
+function createGame(){
+
+
+
+const board=
+document.getElementById(
+"game-board"
+);
+
+
+
+board.innerHTML="";
+
+
+
+cards=[
+
+...cardImages,
+
+...cardImages
+
+];
+
+
+
+cards.sort(
+()=>Math.random()-0.5
+);
+
+
+
+matched=0;
+
+moves=0;
+
+
+
+document.getElementById(
+"matched-count"
+).innerText=0;
+
+
+document.getElementById(
+"move-count"
+).innerText=0;
+
+
 
 cards.forEach(image=>{
 
 
-    const card =
-    document.createElement("div");
 
-
-    card.className="card";
-
-
-    card.dataset.image=image;
+let card=
+document.createElement(
+"div"
+);
 
 
 
-    card.innerHTML = `
-
-        <div class="card-inner">
-
-
-            <div class="card-front">
-
-                <img src="assets/cards/${image}">
-
-            </div>
-
-
-            <div class="card-back">
-
-                <img src="assets/card-back.png">
-
-            </div>
-
-
-        </div>
-
-    `;
-
-
-    board.appendChild(card);
+card.className="card";
 
 
 
-    // 开始全部翻开
+card.dataset.image=image;
 
-    setTimeout(()=>{
 
-        card.classList.add("flip");
 
-    },300);
+card.innerHTML=`
+
+<div class="card-inner">
+
+
+<div class="card-front">
+
+<img src="assets/cards/${image}">
+
+</div>
+
+
+
+<div class="card-back">
+
+<img src="assets/card-back.png">
+
+</div>
+
+
+</div>
+
+`;
+
+
+
+board.appendChild(card);
+
+
+
+card.onclick=function(){
+
+flipCard(card);
+
+};
 
 
 
 });
 
 
+}
+
+
+
+
 
 
 
 // ======================
-// 8秒记忆倒计时
+// 记忆开始
 // ======================
 
 
-let seconds = 8;
-
-
-timeText.innerText = seconds;
+function memoryStart(){
 
 
 
-let timer =
-setInterval(()=>{
-
-
-    seconds--;
-
-
-    timeText.innerText =
-    seconds;
+let allCards=
+document.querySelectorAll(
+".card"
+);
 
 
 
-    console.log(
-        "剩余:",
-        seconds
-    );
+lockBoard=true;
 
 
 
-    if(seconds <= 0){
+allCards.forEach(card=>{
 
 
-        clearInterval(timer);
+card.classList.add(
+"flip"
+);
 
 
-
-        // 全部盖回
-
-        document
-        .querySelectorAll(".card")
-        .forEach(card=>{
-
-
-            card.classList.remove(
-                "flip"
-            );
-
-
-        });
+});
 
 
 
-        timeText.innerText =
-        "开始";
+let time=8;
 
 
 
-        lockBoard=false;
+let timer=setInterval(()=>{
 
 
 
-        startGame();
+time--;
 
 
 
-    }
+document.getElementById(
+"time-count"
+).innerText=time;
 
+
+
+
+if(time<=0){
+
+
+clearInterval(timer);
+
+
+
+allCards.forEach(card=>{
+
+
+card.classList.remove(
+"flip"
+);
+
+
+});
+
+
+
+lockBoard=false;
+
+
+
+}
 
 
 },1000);
-
-
-
-
-
-
-// ======================
-// 开始游戏
-// ======================
-
-
-function startGame(){
-
-
-    document
-    .querySelectorAll(".card")
-    .forEach(card=>{
-
-
-        card.onclick=function(){
-
-
-
-            if(lockBoard)
-            return;
-
-
-
-            if(this===firstCard)
-            return;
-
-
-
-            this.classList.add(
-                "flip"
-            );
-
-
-
-            if(!firstCard){
-
-
-                firstCard=this;
-
-
-                return;
-
-            }
-
-
-
-            secondCard=this;
-
-
-            moves++;
-
-
-            moveText.innerText =
-            moves;
-
-
-
-            checkMatch();
-
-
-
-        };
-
-
-    });
 
 
 
@@ -279,8 +326,80 @@ function startGame(){
 
 
 
+
+
+
 // ======================
-// 判断匹配
+// 翻牌
+// ======================
+
+
+function flipCard(card){
+
+
+
+if(lockBoard)
+return;
+
+
+
+if(card===firstCard)
+return;
+
+
+
+if(card.classList.contains("flip"))
+return;
+
+
+
+card.classList.add(
+"flip"
+);
+
+
+
+if(!firstCard){
+
+
+firstCard=card;
+
+
+return;
+
+
+}
+
+
+
+secondCard=card;
+
+
+moves++;
+
+
+document.getElementById(
+"move-count"
+).innerText=moves;
+
+
+
+checkMatch();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ======================
+// 配对判断
 // ======================
 
 
@@ -288,76 +407,85 @@ function checkMatch(){
 
 
 
-    let same =
+if(
 
-    firstCard.dataset.image ===
-    secondCard.dataset.image;
+firstCard.dataset.image===
+secondCard.dataset.image
 
-
-
-    if(same){
-
-
-        matched++;
-
-
-        matchedText.innerText =
-        matched;
+){
 
 
 
-        reset();
-
-
-        if(matched===8){
-
-
-            setTimeout(()=>{
-
-
-                alert(
-                "恭喜！你寻得了全部宋韵珍品！"
-                );
-
-
-            },500);
-
-
-        }
+matched++;
 
 
 
-    }
-    else{
-
-
-        lockBoard=true;
-
-
-        setTimeout(()=>{
-
-
-            firstCard.classList.remove(
-                "flip"
-            );
-
-
-            secondCard.classList.remove(
-                "flip"
-            );
-
-
-            reset();
+document.getElementById(
+"matched-count"
+).innerText=matched;
 
 
 
-        },1000);
+reset();
 
 
-    }
+
+if(matched===8){
+
+
+setTimeout(()=>{
+
+
+alert(
+"恭喜！寻得全部宋韵珍品！"
+);
+
+
+},500);
 
 
 }
+
+
+
+}
+
+else{
+
+
+lockBoard=true;
+
+
+
+setTimeout(()=>{
+
+
+firstCard.classList.remove(
+"flip"
+);
+
+
+
+secondCard.classList.remove(
+"flip"
+);
+
+
+
+reset();
+
+
+
+},900);
+
+
+
+}
+
+
+
+}
+
 
 
 
@@ -367,11 +495,13 @@ function checkMatch(){
 function reset(){
 
 
-    firstCard=null;
+firstCard=null;
 
-    secondCard=null;
 
-    lockBoard=false;
+secondCard=null;
+
+
+lockBoard=false;
 
 
 }
